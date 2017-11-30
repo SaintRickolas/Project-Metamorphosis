@@ -8,6 +8,7 @@ public class BetterMovement : MonoBehaviour
 
 	public float moveSpeed = 10f;
 	public float turnSpeed = 100f;
+	public Gun gun; 
 
 	bool disabled;// for endgame!! TESTING ONLY 
 
@@ -20,6 +21,16 @@ public class BetterMovement : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+
+		if (Input.GetKeyDown (KeyCode.Space)) 
+		{
+			gun.Shoot (); 
+		}
+
+		else if (Input.GetKey (KeyCode.Space))
+			{
+			gun.AutoFire (); 
+		}
 
 		Vector3 inputDirection = Vector3.zero;//testing
 		if (!disabled) //testing 

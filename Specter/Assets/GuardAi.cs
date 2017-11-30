@@ -40,6 +40,8 @@ public class GuardAi : MonoBehaviour
 
 		navAgent = GetComponent <NavMeshAgent> ();
 
+		GameObject.FindGameObjectWithTag ("Audio"); 
+
 
 		Player = GameObject.FindGameObjectWithTag ("Player").transform; 
 		viewAngle = spotLight.spotAngle;
@@ -72,7 +74,9 @@ public class GuardAi : MonoBehaviour
 			//spotLight.color = originalSpotColor;
 			playerVisibleTimer -= Time.deltaTime;
 			patrolling = true;
-			navAgent.enabled = false;
+			navAgent.enabled = true;
+
+
 		}
 
 		playerVisibleTimer = Mathf.Clamp (playerVisibleTimer,0,timeToSpot);
@@ -87,7 +91,9 @@ public class GuardAi : MonoBehaviour
 			if (GuardHasSpottedPlayer != null)
 			{
 //				GuardHasSpottedPlayer(); 
-				navAgent.SetDestination (target.position); 
+				navAgent.SetDestination (target.position);
+				  
+
 			}
 		}
 	}
@@ -115,7 +121,7 @@ public class GuardAi : MonoBehaviour
 
 	IEnumerator FollowPath(Vector3[] waypoints)   //Patrolling 
 	{
-		transform.position = waypoints [0];
+		//transform.position = waypoints [0];
 
 		int targetWaypointIndex = 1;
 		targetWaypoint = waypoints [targetWaypointIndex];
@@ -123,10 +129,13 @@ public class GuardAi : MonoBehaviour
 
 		while (true)
 		{
-			if (patrolling) {
+			if (patrolling) 
+			{
 				//transform.position = Vector3.MoveTowards (transform.position, targetWaypoint, speed * Time.deltaTime);
 				navAgent.destination = targetWaypoint; 
-				if (transform.position == targetWaypoint) {
+				//if (transform.position == targetWaypoint) 
+				if (Vector3.Distance(Vector3.ProjectOnPlane(transform.position, Vector3.up), Vector3.ProjectOnPlane(targetWaypoint, Vector3.up)) < 0.01f) 
+				{
 					targetWaypointIndex = (targetWaypointIndex + 1) % waypoints.Length;
 					targetWaypoint = waypoints [targetWaypointIndex];
 					yield return new WaitForSeconds (waitTime);
