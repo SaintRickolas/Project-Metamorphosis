@@ -24,23 +24,28 @@ public class GuardAi : MonoBehaviour
 	Color originalSpotColor;
 
 	public bool patrolling = true;
+	public float searchTime = 5f; 
+	public float searchTimer; 
 
 
 	private NavMeshAgent navAgent; //NAVMESH AGENT 
 	public Transform target; 
 	public Vector3 targetWaypoint;
-
+	public EnemyWeap enemyWeapon;
 
 	Transform Player;
+
+
+
 
 
 	void Start () 
 
 	{
-
+		
 		navAgent = GetComponent <NavMeshAgent> ();
 
-		GameObject.FindGameObjectWithTag ("Audio"); 
+		//GameObject.FindGameObjectWithTag ("Audio"); 
 
 
 		Player = GameObject.FindGameObjectWithTag ("Player").transform; 
@@ -64,17 +69,24 @@ public class GuardAi : MonoBehaviour
 	{
 		if (CanSeePlayer ()) 
 		{
+			searchTimer = 0; 
 			spotLight.color = Color.red; 
 			playerVisibleTimer += Time.deltaTime;
 			patrolling = false;
 			navAgent.enabled = true;
+			enemyWeapon.shoot (); 
+
 		} 
 		else 
 		{
-			//spotLight.color = originalSpotColor;
-			playerVisibleTimer -= Time.deltaTime;
-			patrolling = true;
-			navAgent.enabled = true;
+			searchTimer += Time.deltaTime;
+			if (searchTimer > searchTime) 
+			{
+				//spotLight.color = originalSpotColor;
+				playerVisibleTimer -= Time.deltaTime;
+				patrolling = true;
+				navAgent.enabled = true;
+			}
 
 
 		}
@@ -154,7 +166,7 @@ public class GuardAi : MonoBehaviour
 		if (patrolling) {
 			Vector3 dirtoTarget = (lookAtTarget - transform.position).normalized;
 			float targetAngle = 90 - Mathf.Atan2 (dirtoTarget.z, dirtoTarget.x) * Mathf.Rad2Deg;
-
+		
 
 			while (Mathf.Abs (Mathf.DeltaAngle (transform.eulerAngles.y, targetAngle)) > 0.05f) {
 				float angle = Mathf.MoveTowardsAngle (transform.eulerAngles.y, targetAngle, turnspeed * Time.deltaTime);

@@ -73,9 +73,15 @@ public class CameraMovement : MonoBehaviour
 
 	void SmoothLookAt ()
 	{
-		Vector3 relPlayerPosition = player.position - transform.position; 
-		Quaternion lookAtRotation = Quaternion.LookRotation (relPlayerPosition, Vector3.up);
-		transform.rotation = Quaternion.Lerp (transform.rotation, lookAtRotation, smooth * Time.deltaTime);
-	}
+		//Vector3 relPlayerPosition = player.position - transform.position; 
+		//Quaternion lookAtRotation = Quaternion.LookRotation (relPlayerPosition, Vector3.up);
+		//transform.rotation = Quaternion.Lerp (transform.rotation, lookAtRotation, smooth * Time.deltaTime);
 
+		Vector3 relPlayerPosition = player.position - transform.position;
+		if (relPlayerPosition.magnitude > 1e-4f) {
+			Quaternion lookAtRotation = Quaternion.LookRotation (relPlayerPosition, Vector3.up);
+			transform.rotation = Quaternion.Lerp (transform.rotation, lookAtRotation, smooth * Time.deltaTime);
+		
+		}
+	}
 }
